@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import restaurantRouter from "./presentation/routes/restaurant.routes";
+import restaurantRouter from "./presentation/controllers/routes/restaurant.routes";
 import { errorMiddleware } from "./presentation/middlewares/error.middleware";
 
 const app = express();

@@ -14,4 +14,6 @@ restaurantRouter.post(
   restaurantController.create,
 );
 
+restaurantRouter.get("/", restaurantController.getAll);
+
 export default restaurantRouter;

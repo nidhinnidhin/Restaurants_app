@@ -2,12 +2,12 @@ import { RestaurantController } from "../../presentation/controllers/restaurant.
 
 import { createRestaurantDependencies } from "./restaurant.container";
 
-export const createRestaurantController =
-  (): RestaurantController => {
-    const { createRestaurantUseCase } =
-      createRestaurantDependencies();
+export const createRestaurantController = (): RestaurantController => {
+  const { createRestaurantUseCase, getRestaurantsUseCase } =
+    createRestaurantDependencies();
 
-    return new RestaurantController(
-      createRestaurantUseCase,
-    );
-  };
+  return new RestaurantController(
+    createRestaurantUseCase,
+    getRestaurantsUseCase,
+  );
+};
