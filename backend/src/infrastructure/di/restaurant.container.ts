@@ -9,12 +9,15 @@ import { ICreateRestaurantUseCase } from "../../application/interfaces/use-cases
 import { IGetRestaurantsUseCase } from "../../application/interfaces/use-cases/get-restaurants.use-case.interface";
 import { IGetRestaurantUseCase } from "../../application/interfaces/use-cases/get-restaurant.use-case.interface";
 import { IUpdateRestaurantUseCase } from "../../application/interfaces/use-cases/update-restaurant.use-case.interface";
+import { DeleteRestaurantUseCase } from "../../application/use-cases/restaurant/delete-restaurant.use-case";
+import { IDeleteRestaurantUseCase } from "../../application/interfaces/use-cases/delete-restaurant.use-case.interface";
 
 export interface RestaurantDependencies {
   createRestaurantUseCase: ICreateRestaurantUseCase;
   getRestaurantsUseCase: IGetRestaurantsUseCase;
   getRestaurantUseCase: IGetRestaurantUseCase;
   updateRestaurantUseCase: IUpdateRestaurantUseCase;
+  deleteRestaurantUseCase: IDeleteRestaurantUseCase;
 }
 
 export const createRestaurantDependencies = (): RestaurantDependencies => {
@@ -32,10 +35,15 @@ export const createRestaurantDependencies = (): RestaurantDependencies => {
     restaurantRepository,
   );
 
+  const deleteRestaurantUseCase = new DeleteRestaurantUseCase(
+    restaurantRepository,
+  );
+
   return {
     createRestaurantUseCase,
     getRestaurantsUseCase,
     getRestaurantUseCase,
     updateRestaurantUseCase,
+    deleteRestaurantUseCase,
   };
 };

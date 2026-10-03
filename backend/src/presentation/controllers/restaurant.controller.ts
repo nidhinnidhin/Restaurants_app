@@ -8,6 +8,7 @@ import { CreateRestaurantDto } from "../../application/dto/restaurant/create-res
 import { IGetRestaurantUseCase } from "../../application/interfaces/use-cases/get-restaurant.use-case.interface";
 import { IUpdateRestaurantUseCase } from "../../application/interfaces/use-cases/update-restaurant.use-case.interface";
 import { UpdateRestaurantDto } from "../../application/dto/restaurant/update-restaurant.dto";
+import { IDeleteRestaurantUseCase } from "../../application/interfaces/use-cases/delete-restaurant.use-case.interface";
 
 export class RestaurantController {
   constructor(
@@ -18,6 +19,8 @@ export class RestaurantController {
     private readonly _getRestaurantUseCase: IGetRestaurantUseCase,
 
     private readonly _updateRestaurantUseCase: IUpdateRestaurantUseCase,
+
+    private readonly deleteRestaurantUseCase: IDeleteRestaurantUseCase,
   ) {}
 
   create = async (
@@ -95,4 +98,21 @@ export class RestaurantController {
       next(error);
     }
   };
+
+  delete = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const id = Number(req.params.id);
+
+    await this.deleteRestaurantUseCase.execute(id);
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
 }

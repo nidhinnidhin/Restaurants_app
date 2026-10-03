@@ -8,6 +8,7 @@ export const createRestaurantController = (): RestaurantController => {
     getRestaurantsUseCase,
     getRestaurantUseCase,
     updateRestaurantUseCase,
+    deleteRestaurantUseCase,
   } = createRestaurantDependencies();
 
   return new RestaurantController(
@@ -15,5 +16,6 @@ export const createRestaurantController = (): RestaurantController => {
     getRestaurantsUseCase,
     getRestaurantUseCase,
     updateRestaurantUseCase,
+    deleteRestaurantUseCase,
   );
 };

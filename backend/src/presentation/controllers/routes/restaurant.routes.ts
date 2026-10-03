@@ -34,4 +34,10 @@ restaurantRouter.patch(
   restaurantController.update,
 );
 
+restaurantRouter.delete(
+  "/:id",
+  validateParams(restaurantIdSchema),
+  restaurantController.delete,
+);
+
 export default restaurantRouter;
