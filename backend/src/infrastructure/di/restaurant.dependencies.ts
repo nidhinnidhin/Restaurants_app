@@ -3,11 +3,17 @@ import { RestaurantController } from "../../presentation/controllers/restaurant.
 import { createRestaurantDependencies } from "./restaurant.container";
 
 export const createRestaurantController = (): RestaurantController => {
-  const { createRestaurantUseCase, getRestaurantsUseCase } =
-    createRestaurantDependencies();
+  const {
+    createRestaurantUseCase,
+    getRestaurantsUseCase,
+    getRestaurantUseCase,
+    updateRestaurantUseCase,
+  } = createRestaurantDependencies();
 
   return new RestaurantController(
     createRestaurantUseCase,
     getRestaurantsUseCase,
+    getRestaurantUseCase,
+    updateRestaurantUseCase,
   );
 };

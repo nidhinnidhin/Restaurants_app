@@ -16,12 +16,33 @@ export const createRestaurantSchema = z.object({
   contact: z
     .string()
     .trim()
-    .regex(
-      /^[0-9+\-\s()]{7,20}$/,
-      "Invalid contact number",
-    ),
+    .regex(/^[0-9+\-\s()]{7,20}$/, "Invalid contact number"),
 });
 
-export type CreateRestaurantInput = z.infer<
-  typeof createRestaurantSchema
->;
+export const updateRestaurantSchema = z
+  .object({
+    name: z
+      .string()
+      .trim()
+      .min(2, "Restaurant name must contain at least 2 characters")
+      .max(255, "Restaurant name cannot exceed 255 characters")
+      .optional(),
+
+    address: z
+      .string()
+      .trim()
+      .min(5, "Address must contain at least 5 characters")
+      .max(1000, "Address cannot exceed 1000 characters")
+      .optional(),
+
+    contact: z
+      .string()
+      .trim()
+      .regex(/^[0-9+\-\s()]{7,20}$/, "Invalid contact number")
+      .optional(),
+  })
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field is required for update",
+  });
+
+export type CreateRestaurantInput = z.infer<typeof createRestaurantSchema>;

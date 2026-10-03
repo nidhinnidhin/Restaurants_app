@@ -5,12 +5,19 @@ import { ICreateRestaurantUseCase } from "../../application/interfaces/use-cases
 import { IGetRestaurantsUseCase } from "../../application/interfaces/use-cases/get-restaurants.use-case.interface";
 
 import { CreateRestaurantDto } from "../../application/dto/restaurant/create-restaurant.dto";
+import { IGetRestaurantUseCase } from "../../application/interfaces/use-cases/get-restaurant.use-case.interface";
+import { IUpdateRestaurantUseCase } from "../../application/interfaces/use-cases/update-restaurant.use-case.interface";
+import { UpdateRestaurantDto } from "../../application/dto/restaurant/update-restaurant.dto";
 
 export class RestaurantController {
   constructor(
     private readonly createRestaurantUseCase: ICreateRestaurantUseCase,
 
     private readonly getRestaurantsUseCase: IGetRestaurantsUseCase,
+
+    private readonly _getRestaurantUseCase: IGetRestaurantUseCase,
+
+    private readonly _updateRestaurantUseCase: IUpdateRestaurantUseCase,
   ) {}
 
   create = async (
@@ -43,6 +50,46 @@ export class RestaurantController {
       res.status(200).json({
         success: true,
         data: restaurants,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const id = Number(req.params.id);
+
+      const restaurant = await this._getRestaurantUseCase.execute(id);
+
+      res.status(200).json({
+        success: true,
+        data: restaurant,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  update = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const id = Number(req.params.id);
+
+      const dto: UpdateRestaurantDto = req.body;
+
+      const restaurant = await this._updateRestaurantUseCase.execute(id, dto);
+
+      res.status(200).json({
+        success: true,
+        data: restaurant,
       });
     } catch (error) {
       next(error);
