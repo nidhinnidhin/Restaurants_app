@@ -1,5 +1,8 @@
-import { RestaurantResponseDto } from "../../dto/restaurant/restaurant-response.dto";
+import { RestaurantPaginationDto } from "../../dto/restaurant/restaurant-pagination.dto";
+import { RestaurantPaginationQueryDto } from "../../dto/restaurant/restaurant-pagination-query.dto";
 
 export interface IGetRestaurantsUseCase {
-  execute(): Promise<RestaurantResponseDto[]>;
+  execute(
+    query: RestaurantPaginationQueryDto,
+  ): Promise<RestaurantPaginationDto>;
 }

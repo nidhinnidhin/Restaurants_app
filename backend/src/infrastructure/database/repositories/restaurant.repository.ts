@@ -1,6 +1,8 @@
 import {
   CreateRestaurantData,
   IRestaurantRepository,
+  PaginatedRestaurants,
+  PaginationOptions,
   UpdateRestaurantData,
 } from "../../../domain/interfaces/repositories/restaurant.repository.interface";
 
@@ -15,12 +17,21 @@ export class RestaurantRepository implements IRestaurantRepository {
     return this.toDomain(restaurant);
   }
 
-  async findAll(): Promise<Restaurant[]> {
-    const restaurants = await RestaurantModel.findAll({
+  async findAll(options: PaginationOptions): Promise<PaginatedRestaurants> {
+    const { page, limit } = options;
+
+    const offset = (page - 1) * limit;
+
+    const { rows, count } = await RestaurantModel.findAndCountAll({
+      limit,
+      offset,
       order: [["createdAt", "DESC"]],
     });
 
-    return restaurants.map((restaurant) => this.toDomain(restaurant));
+    return {
+      restaurants: rows.map((restaurant) => this.toDomain(restaurant)),
+      totalItems: count,
+    };
   }
 
   async findById(id: number): Promise<Restaurant | null> {

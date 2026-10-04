@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { Box, Button, InputAdornment, Stack, TextField } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
+import StorefrontTwoToneIcon from "@mui/icons-material/StorefrontTwoTone";
+import LocationOnTwoToneIcon from "@mui/icons-material/LocationOnTwoTone";
+import PhoneTwoToneIcon from "@mui/icons-material/PhoneTwoTone";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
 
-import type {
-  CreateRestaurantRequest,
-  UpdateRestaurantRequest,
-} from "../../types/restaurant";
+import type { CreateRestaurantRequest } from "../../types/restaurant";
 
 interface RestaurantFormProps {
   initialValues?: CreateRestaurantRequest;
   submitLabel?: string;
   isSubmitting?: boolean;
-  onSubmit: (
-    data: CreateRestaurantRequest | UpdateRestaurantRequest,
-  ) => Promise<void>;
+  onSubmit: (data: CreateRestaurantRequest) => Promise<void>;
 }
 
 interface FormErrors {
@@ -28,6 +28,8 @@ const RestaurantForm = ({
   isSubmitting = false,
   onSubmit,
 }: RestaurantFormProps) => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState<CreateRestaurantRequest>({
     name: initialValues?.name ?? "",
     address: initialValues?.address ?? "",
@@ -111,19 +113,32 @@ const RestaurantForm = ({
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit}>
-      <Stack spacing={3}>
+    <Box component="form" onSubmit={handleSubmit} noValidate>
+      <Stack spacing={3.5}>
+        {/* Restaurant Name */}
         <TextField
           label="Restaurant Name"
+          placeholder="e.g. Le Petit Bistro"
           value={formData.name}
           onChange={(event) => handleChange("name", event.target.value)}
           error={Boolean(errors.name)}
           helperText={errors.name}
           required
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <StorefrontTwoToneIcon sx={{ color: "#D4AC0D" }} />
+                </InputAdornment>
+              ),
+            },
+          }}
         />
 
+        {/* Address */}
         <TextField
-          label="Address"
+          label="Full Address & Location"
+          placeholder="e.g. 742 Evergreen Terrace, Suite 100"
           value={formData.address}
           onChange={(event) => handleChange("address", event.target.value)}
           error={Boolean(errors.address)}
@@ -131,40 +146,83 @@ const RestaurantForm = ({
           multiline
           minRows={3}
           required
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start" sx={{ alignSelf: "flex-start", mt: 1.5 }}>
+                  <LocationOnTwoToneIcon sx={{ color: "#D4AC0D" }} />
+                </InputAdornment>
+              ),
+            },
+          }}
         />
 
+        {/* Mobile Contact Number */}
         <TextField
-          label="Mobile Number"
+          label="Contact Mobile Number (10 digits)"
+          placeholder="e.g. 9876543210"
           value={formData.contact}
           onChange={(event) => {
             const value = event.target.value;
-
             if (/^\d{0,10}$/.test(value)) {
               handleChange("contact", value);
             }
           }}
           error={Boolean(errors.contact)}
-          helperText={errors.contact}
+          helperText={errors.contact || "Must be a 10-digit mobile number"}
           slotProps={{
             htmlInput: {
               inputMode: "numeric",
               maxLength: 10,
             },
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PhoneTwoToneIcon sx={{ color: "#D9381E" }} />
+                </InputAdornment>
+              ),
+            },
           }}
           required
         />
 
-        <Button
-          type="submit"
-          variant="contained"
-          startIcon={<SaveIcon />}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Saving..." : submitLabel}
-        </Button>
+        {/* Form Action Buttons */}
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ pt: 1 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="large"
+            startIcon={<SaveIcon />}
+            disabled={isSubmitting}
+            sx={{ flex: 1, py: 1.4 }}
+          >
+            {isSubmitting ? "Saving..." : submitLabel}
+          </Button>
+
+          <Button
+            variant="outlined"
+            size="large"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate("/")}
+            sx={{
+              py: 1.4,
+              borderColor: "rgba(255, 255, 255, 0.2)",
+              color: "#9CA3AF",
+              "&:hover": {
+                borderColor: "#FFFFFF",
+                color: "#FFFFFF",
+                backgroundColor: "rgba(255, 255, 255, 0.05)",
+              },
+            }}
+          >
+            Cancel
+          </Button>
+        </Stack>
       </Stack>
     </Box>
   );
 };
 
 export default RestaurantForm;
+

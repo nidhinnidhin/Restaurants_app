@@ -18,3 +18,17 @@ export interface UpdateRestaurantRequest {
   address?: string;
   contact?: string;
 }
+
+export interface RestaurantPagination {
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface RestaurantListResponse {
+  restaurants: Restaurant[];
+  pagination: RestaurantPagination;
+}

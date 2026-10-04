@@ -12,17 +12,24 @@ export interface UpdateRestaurantData {
   contact?: string;
 }
 
+export interface PaginationOptions {
+  page: number;
+  limit: number;
+}
+
+export interface PaginatedRestaurants {
+  restaurants: Restaurant[];
+  totalItems: number;
+}
+
 export interface IRestaurantRepository {
   create(data: CreateRestaurantData): Promise<Restaurant>;
 
-  findAll(): Promise<Restaurant[]>;
+  findAll(options: PaginationOptions): Promise<PaginatedRestaurants>;
 
   findById(id: number): Promise<Restaurant | null>;
 
-  update(
-    id: number,
-    data: UpdateRestaurantData,
-  ): Promise<Restaurant | null>;
+  update(id: number, data: UpdateRestaurantData): Promise<Restaurant | null>;
 
   delete(id: number): Promise<boolean>;
 }

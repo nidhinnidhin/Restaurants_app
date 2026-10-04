@@ -42,17 +42,19 @@ export class RestaurantController {
     }
   };
 
-  getAll = async (
-    _req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const restaurants = await this.getRestaurantsUseCase.execute();
+      const page = Math.max(1, Number(req.query.page) || 1);
+      const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
+
+      const result = await this.getRestaurantsUseCase.execute({
+        page,
+        limit,
+      });
 
       res.status(200).json({
         success: true,
-        data: restaurants,
+        data: result,
       });
     } catch (error) {
       next(error);
@@ -100,19 +102,18 @@ export class RestaurantController {
   };
 
   delete = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
-    const id = Number(req.params.id);
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const id = Number(req.params.id);
 
-    await this.deleteRestaurantUseCase.execute(id);
+      await this.deleteRestaurantUseCase.execute(id);
 
-    res.status(204).send();
-  } catch (error) {
-    next(error);
-  }
-};
-
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  };
 }

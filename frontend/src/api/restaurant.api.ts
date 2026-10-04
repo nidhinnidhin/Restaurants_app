@@ -1,9 +1,21 @@
-import type { CreateRestaurantRequest, Restaurant, UpdateRestaurantRequest } from "../types/restaurant";
+import type {
+  CreateRestaurantRequest,
+  Restaurant,
+  RestaurantListResponse,
+  UpdateRestaurantRequest,
+} from "../types/restaurant";
 import apiClient from "./axios";
 
-
-export const getRestaurants = async (): Promise<Restaurant[]> => {
-  const response = await apiClient.get("/restaurants");
+export const getRestaurants = async (
+  page = 1,
+  limit = 10,
+): Promise<RestaurantListResponse> => {
+  const response = await apiClient.get("/restaurants", {
+    params: {
+      page,
+      limit,
+    },
+  });
 
   return response.data.data;
 };
