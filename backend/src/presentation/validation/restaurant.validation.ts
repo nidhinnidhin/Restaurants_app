@@ -1,48 +1,44 @@
 import { z } from "zod";
 
+const restaurantNameSchema = z
+  .string()
+  .trim()
+  .min(3, "Restaurant name must contain at least 3 characters")
+  .max(255, "Restaurant name cannot exceed 255 characters")
+  .regex(/[A-Za-z]/, "Restaurant name must contain at least one letter")
+  .regex(
+    /^[A-Za-z0-9][A-Za-z0-9\s&.'-]*$/,
+    "Restaurant name contains invalid characters",
+  );
+
+const restaurantAddressSchema = z
+  .string()
+  .trim()
+  .min(5, "Address must contain at least 5 characters")
+  .max(1000, "Address cannot exceed 1000 characters")
+  .regex(/[A-Za-z]{2,}/, "Please enter a valid address");
+
+const restaurantContactSchema = z
+  .string()
+  .trim()
+  .regex(/^\d{10}$/, "Mobile number must contain exactly 10 digits");
+
 export const createRestaurantSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Restaurant name must contain at least 2 characters")
-    .max(255, "Restaurant name cannot exceed 255 characters"),
+  name: restaurantNameSchema,
 
-  address: z
-    .string()
-    .trim()
-    .min(5, "Address must contain at least 5 characters")
-    .max(1000, "Address cannot exceed 1000 characters"),
+  address: restaurantAddressSchema,
 
-  contact: z
-    .string()
-    .trim()
-    .regex(/^[0-9+\-\s()]{7,20}$/, "Invalid contact number"),
+  contact: restaurantContactSchema,
 });
 
-export const updateRestaurantSchema = z
-  .object({
-    name: z
-      .string()
-      .trim()
-      .min(2, "Restaurant name must contain at least 2 characters")
-      .max(255, "Restaurant name cannot exceed 255 characters")
-      .optional(),
+export const updateRestaurantSchema = z.object({
+  name: restaurantNameSchema,
 
-    address: z
-      .string()
-      .trim()
-      .min(5, "Address must contain at least 5 characters")
-      .max(1000, "Address cannot exceed 1000 characters")
-      .optional(),
+  address: restaurantAddressSchema,
 
-    contact: z
-      .string()
-      .trim()
-      .regex(/^[0-9+\-\s()]{7,20}$/, "Invalid contact number")
-      .optional(),
-  })
-  .refine((data) => Object.keys(data).length > 0, {
-    message: "At least one field is required for update",
-  });
+  contact: restaurantContactSchema,
+});
 
 export type CreateRestaurantInput = z.infer<typeof createRestaurantSchema>;
+
+export type UpdateRestaurantInput = z.infer<typeof updateRestaurantSchema>;

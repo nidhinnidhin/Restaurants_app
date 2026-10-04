@@ -58,20 +58,37 @@ const RestaurantForm = ({
     const address = formData.address.trim();
     const contact = formData.contact.trim();
 
-    if (name.length < 2) {
-      newErrors.name = "Restaurant name must contain at least 2 characters";
+    // Restaurant name
+    if (!name) {
+      newErrors.name = "Restaurant name is required";
+    } else if (name.length < 3) {
+      newErrors.name = "Restaurant name must contain at least 3 characters";
     } else if (name.length > 255) {
       newErrors.name = "Restaurant name cannot exceed 255 characters";
+    } else if (!/[A-Za-z]/.test(name)) {
+      newErrors.name = "Restaurant name must contain letters";
+    } else if (!/^[A-Za-z0-9][A-Za-z0-9\s&.'-]*$/.test(name)) {
+      newErrors.name = "Restaurant name contains invalid characters";
     }
 
-    if (address.length < 5) {
+    // Address
+    if (!address) {
+      newErrors.address = "Address is required";
+    } else if (address.length < 5) {
       newErrors.address = "Address must contain at least 5 characters";
     } else if (address.length > 1000) {
       newErrors.address = "Address cannot exceed 1000 characters";
+    } else if (!/[A-Za-z]/.test(address)) {
+      newErrors.address = "Please enter a valid address";
+    } else if (!/[A-Za-z]{2,}/.test(address)) {
+      newErrors.address = "Please enter a meaningful address";
     }
 
-    if (!/^[0-9+\-\s()]{7,20}$/.test(contact)) {
-      newErrors.contact = "Enter a valid contact number";
+    // Mobile number
+    if (!contact) {
+      newErrors.contact = "Mobile number is required";
+    } else if (!/^\d{10}$/.test(contact)) {
+      newErrors.contact = "Mobile number must contain exactly 10 digits";
     }
 
     setErrors(newErrors);
@@ -117,11 +134,23 @@ const RestaurantForm = ({
         />
 
         <TextField
-          label="Contact Number"
+          label="Mobile Number"
           value={formData.contact}
-          onChange={(event) => handleChange("contact", event.target.value)}
+          onChange={(event) => {
+            const value = event.target.value;
+
+            if (/^\d{0,10}$/.test(value)) {
+              handleChange("contact", value);
+            }
+          }}
           error={Boolean(errors.contact)}
           helperText={errors.contact}
+          slotProps={{
+            htmlInput: {
+              inputMode: "numeric",
+              maxLength: 10,
+            },
+          }}
           required
         />
 

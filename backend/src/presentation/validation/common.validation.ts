@@ -6,3 +6,7 @@ export const restaurantIdSchema = z.object({
     .int("Restaurant ID must be an integer")
     .positive("Restaurant ID must be positive"),
 });
+
+export type RestaurantIdInput = z.infer<
+  typeof restaurantIdSchema
+>;
